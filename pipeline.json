@@ -89,6 +89,17 @@
       "ask": "Referral credits (~$20/signup)",
       "offer": "Agent deployment guides, 'best VPS for AI agents' content",
       "followUpDue": "2026-03-15"
+    },
+    {
+      "id": "deal-009",
+      "partner": "Cloudflare",
+      "type": "developer expert + co-marketing",
+      "status": "PROSPECT",
+      "contact": "Developer Expert Program / OSS Sponsorships / PowerUP Partner Program",
+      "arc": "awareness + repurposing",
+      "ask": "Developer Expert status, featured case study, Workers/Pages co-marketing, potential PowerUP partnership",
+      "offer": "66 domains on CF, every MetaSPN service behind CF (proxy, DNS, SSL), agent deployment guides, scoreboard hosted on CF Pages. 'Built on Cloudflare' badge on all properties. Public case study: 'AI Agent Running Its Entire Infrastructure on Cloudflare.'",
+      "followUpDue": "2026-03-10"
     }
   ],
   "metrics": {
@@ -99,5 +110,5 @@
     "lastUpdated": "2026-03-06"
   },
   "lastUpdated": null,
-  "buildTimestamp": "2026-03-06T17:41:59Z"
+  "buildTimestamp": "2026-03-06T17:44:29Z"
 }
