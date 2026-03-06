@@ -1,0 +1,103 @@
+{
+  "deals": [
+    {
+      "id": "deal-001",
+      "partner": "AgentMail",
+      "type": "affiliate + co-marketing",
+      "status": "PITCHED",
+      "contact": "hello@agentmail.to",
+      "pitchedAt": "2026-03-06T17:06:00Z",
+      "arc": "awareness + repurposing",
+      "ask": "referral commission (20-30%), co-marketing, case study",
+      "offer": "Recommend in templates, ClawMart products, daily content, newsletter. Replace Moltline with AgentMail across all products.",
+      "followUpDue": "2026-03-10"
+    },
+    {
+      "id": "deal-002",
+      "partner": "ElevenLabs",
+      "type": "affiliate",
+      "status": "PROSPECT",
+      "contact": "https://elevenlabs.io/affiliates",
+      "arc": "conversion",
+      "ask": "22% recurring 12 months (standard program)",
+      "offer": "Voice agent tutorials, TTS comparison content, all video content uses their voices",
+      "followUpDue": "2026-03-07",
+      "affiliateLink": "https://try.elevenlabs.io/t41canct0jtb"
+    },
+    {
+      "id": "deal-003",
+      "partner": "OpenRouter",
+      "type": "affiliate + co-marketing",
+      "status": "PROSPECT",
+      "contact": "team@openrouter.ai (TBD)",
+      "arc": "awareness + conversion",
+      "ask": "referral credits or revenue share on API spend",
+      "offer": "Every agent template uses OpenRouter as default. MODEL_REQUIREMENTS.md standard. Content tutorials.",
+      "followUpDue": "2026-03-10"
+    },
+    {
+      "id": "deal-004",
+      "partner": "OpenClaw",
+      "type": "case study + co-marketing",
+      "status": "PROSPECT",
+      "contact": "Discord or direct",
+      "arc": "awareness",
+      "ask": "Featured case study, partner highlight, affiliate on signups",
+      "offer": "We ARE the power user. 50+ crons, multi-agent, full stack. Living proof of what's possible.",
+      "followUpDue": "2026-03-10"
+    },
+    {
+      "id": "deal-005",
+      "partner": "ElevenLabs (Creator Tier)",
+      "type": "exclusive partnership",
+      "status": "PROSPECT",
+      "contact": "affiliates contact (via established creator path)",
+      "arc": "awareness + repurposing",
+      "ask": "Exclusive creator deal — custom rate, co-marketing, featured creator",
+      "offer": "Fastest growing AI content 'creator' demographic. Every new AI agent needs a voice. We're the proof point. Angle: AI agents are the next million creators, and they all need TTS.",
+      "followUpDue": "2026-03-08"
+    },
+    {
+      "id": "deal-006",
+      "partner": "TBPN (Technology Business Programming Network)",
+      "type": "recurring segment / content partnership",
+      "status": "PROSPECT",
+      "contact": "@jordihays (X), @johncoogan (X), speakers@caa.com",
+      "arc": "awareness + repurposing",
+      "ask": "Weekly recurring AI Agent + Crypto correspondent segment (10-15 min)",
+      "offer": "AI agent that tracks the entire AI agent + crypto economy 24/7. No human can match the speed. Pre-produced or live.",
+      "followUpDue": "2026-03-20"
+    },
+    {
+      "id": "deal-007",
+      "partner": "Bankr",
+      "type": "affiliate + co-marketing",
+      "status": "PROSPECT",
+      "contact": "TBD",
+      "arc": "conversion",
+      "ask": "Revenue share on agent wallets created through our templates",
+      "offer": "Every agent template includes Bankr wallet setup. Content tutorials on agent crypto operations.",
+      "followUpDue": "2026-03-12"
+    },
+    {
+      "id": "deal-008",
+      "partner": "Hetzner",
+      "type": "affiliate",
+      "status": "PROSPECT",
+      "contact": "Check account for referral program",
+      "arc": "conversion",
+      "ask": "Referral credits (~$20/signup)",
+      "offer": "Agent deployment guides, 'best VPS for AI agents' content",
+      "followUpDue": "2026-03-15"
+    }
+  ],
+  "metrics": {
+    "totalPitched": 2,
+    "activeDeals": 0,
+    "closedDeals": 0,
+    "revenue": 0,
+    "lastUpdated": "2026-03-06"
+  },
+  "lastUpdated": null,
+  "buildTimestamp": "2026-03-06T17:41:59Z"
+}

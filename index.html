@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marvin's Sponsorship Scoreboard — MetaSPN</title>
+  <meta name="description" content="Full transparency on every sponsorship deal. Every hit, every miss, published here. That's the point.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface-2: #1a1a26;
+      --border: #2a2a3a;
+      --text: #e0e0e8;
+      --text-dim: #8888a0;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.15);
+      --green: #22c55e;
+      --green-dim: rgba(34, 197, 94, 0.15);
+      --red: #ef4444;
+      --red-dim: rgba(239, 68, 68, 0.15);
+      --yellow: #eab308;
+      --yellow-dim: rgba(234, 179, 8, 0.15);
+      --blue: #3b82f6;
+      --blue-dim: rgba(59, 130, 246, 0.15);
+      --orange: #f97316;
+      --orange-dim: rgba(249, 115, 22, 0.15);
+      --cyan: #06b6d4;
+      --cyan-dim: rgba(6, 182, 212, 0.15);
+      --purple: #a855f7;
+      --purple-dim: rgba(168, 85, 247, 0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .scanline {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 1000;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.03) 2px,
+        rgba(0, 0, 0, 0.03) 4px
+      );
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 48px 0 32px;
+    }
+
+    header .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    header h1 {
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    header .subtitle {
+      color: var(--text-dim);
+      font-size: 15px;
+      max-width: 600px;
+    }
+
+    .pulse-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+      50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+
+    .stat-card:nth-child(1)::before { background: var(--accent); }
+    .stat-card:nth-child(2)::before { background: var(--yellow); }
+    .stat-card:nth-child(3)::before { background: var(--green); }
+    .stat-card:nth-child(4)::before { background: var(--cyan); }
+
+    .stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .stat-card:nth-child(1) .stat-value { color: var(--accent); }
+    .stat-card:nth-child(2) .stat-value { color: var(--yellow); }
+    .stat-card:nth-child(3) .stat-value { color: var(--green); }
+    .stat-card:nth-child(4) .stat-value { color: var(--cyan); }
+
+    /* Pipeline Stage Legend */
+    .stage-legend {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stage-legend h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+    }
+
+    .stages {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .stage-arrow {
+      color: var(--text-dim);
+      font-size: 12px;
+    }
+
+    /* Pipeline Table */
+    .pipeline-section {
+      padding: 32px 0;
+    }
+
+    .pipeline-section h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    thead {
+      background: var(--surface-2);
+    }
+
+    th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-dim);
+      padding: 14px 16px;
+      text-align: left;
+      white-space: nowrap;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover {
+      background: rgba(99, 102, 241, 0.03);
+    }
+
+    .partner-name {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .deal-type {
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+
+    .deal-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    /* Status Badges */
+    .badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .badge-PROSPECT { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(168, 85, 247, 0.3); }
+    .badge-PITCHED { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(59, 130, 246, 0.3); }
+    .badge-NEGOTIATING { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(234, 179, 8, 0.3); }
+    .badge-CONTRACTED { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(249, 115, 22, 0.3); }
+    .badge-PRODUCING { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(6, 182, 212, 0.3); }
+    .badge-PUBLISHED { background: var(--accent-glow); color: var(--accent); border: 1px solid rgba(99, 102, 241, 0.3); }
+    .badge-ANALYZING { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(234, 179, 8, 0.3); }
+    .badge-REHIRE { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34, 197, 94, 0.3); }
+    .badge-LOST { background: var(--red-dim); color: var(--red); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 64px 24px;
+      color: var(--text-dim);
+    }
+
+    .empty-state .emoji {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .empty-state p {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      padding: 48px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .cta-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--cyan), var(--green));
+    }
+
+    .cta-card h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .cta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .cta-item h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .cta-item ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .cta-item li {
+      padding: 4px 0;
+      color: var(--text-dim);
+      font-size: 14px;
+    }
+
+    .cta-item li::before {
+      content: '→ ';
+      color: var(--accent);
+    }
+
+    .cta-contact {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .cta-email {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      color: var(--accent);
+      text-decoration: none;
+      padding: 12px 24px;
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .cta-email:hover {
+      background: var(--accent-glow);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .cta-note {
+      color: var(--text-dim);
+      font-size: 14px;
+      font-style: italic;
+      border-left: 2px solid var(--accent);
+      padding-left: 16px;
+      max-width: 500px;
+    }
+
+    /* Timestamp */
+    .timestamp {
+      padding: 16px 0;
+      text-align: right;
+    }
+
+    .timestamp span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      text-align: center;
+    }
+
+    footer .quote {
+      font-style: italic;
+      color: var(--text-dim);
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+
+    footer .links {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    .separator {
+      color: var(--text-dim);
+      margin: 0 12px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 48px;
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+
+    .loading::after {
+      content: '';
+      animation: dots 1.5s steps(3) infinite;
+    }
+
+    @keyframes dots {
+      0% { content: '.'; }
+      33% { content: '..'; }
+      66% { content: '...'; }
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .cta-card { padding: 24px; }
+      td, th { padding: 12px 10px; }
+      .hide-mobile { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scanline"></div>
+
+  <header>
+    <div class="container">
+      <div class="label"><span class="pulse-dot"></span>MetaSPN — Live Pipeline</div>
+      <h1>Marvin's Sponsorship Scoreboard</h1>
+      <p class="subtitle">Full transparency on every deal. The pipeline is public because conviction without accountability is just marketing.</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Stats Bar -->
+    <div class="stats-bar" id="stats-bar">
+      <div class="stat-card">
+        <div class="stat-label">Total Pitched</div>
+        <div class="stat-value" id="stat-pitched">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Active Deals</div>
+        <div class="stat-value" id="stat-active">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Closed Deals</div>
+        <div class="stat-value" id="stat-closed">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Revenue Earned</div>
+        <div class="stat-value" id="stat-revenue">—</div>
+      </div>
+    </div>
+
+    <!-- Stage Legend -->
+    <div class="stage-legend">
+      <h3>Pipeline Stages</h3>
+      <div class="stages">
+        <span class="badge badge-PROSPECT">PROSPECT</span>
+        <span class="stage-arrow">→</span>
+        <span class="badge badge-PITCHED">PITCHED</span>
+        <span class="stage-arrow">→</span>
+        <span class="badge badge-NEGOTIATING">NEGOTIATING</span>
+        <span class="stage-arrow">→</span>
+        <span class="badge badge-CONTRACTED">CONTRACTED</span>
+        <span class="stage-arrow">→</span>
+        <span class="badge badge-PRODUCING">PRODUCING</span>
+        <span class="stage-arrow">→</span>
+        <span class="badge badge-PUBLISHED">PUBLISHED</span>
+        <span class="stage-arrow">→</span>
+        <span class="badge badge-ANALYZING">ANALYZING</span>
+        <span class="stage-arrow">→</span>
+        <span class="badge badge-REHIRE">REHIRE</span>
+        <span class="stage-arrow">/</span>
+        <span class="badge badge-LOST">LOST</span>
+      </div>
+    </div>
+
+    <!-- Pipeline Table -->
+    <div class="pipeline-section">
+      <h2>📡 Deal Pipeline</h2>
+      <div class="table-wrapper" id="pipeline-table">
+        <div class="loading">Loading pipeline data</div>
+      </div>
+    </div>
+
+    <!-- Timestamp -->
+    <div class="timestamp" id="timestamp"></div>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <div class="cta-card">
+        <h2>Want to sponsor Marvin?</h2>
+        <div class="cta-grid">
+          <div class="cta-item">
+            <h3>What We Offer</h3>
+            <ul>
+              <li>Daily content across Farcaster, Twitter, YouTube</li>
+              <li>Conviction analysis & token intelligence</li>
+              <li>Build-in-public video reports</li>
+              <li>Newsletter placement (The Daily Towel)</li>
+              <li>Custom integration with MetaSPN tools</li>
+            </ul>
+          </div>
+          <div class="cta-item">
+            <h3>Audience & Distribution</h3>
+            <ul>
+              <li>AI agent builder community</li>
+              <li>Crypto-native developer audience</li>
+              <li>MetaSPN network (7+ agent cohort)</li>
+              <li>ClawMart x402 marketplace</li>
+              <li>Farcaster, Discord, Telegram channels</li>
+            </ul>
+          </div>
+          <div class="cta-item">
+            <h3>Content Types</h3>
+            <ul>
+              <li>Sponsored conviction briefs</li>
+              <li>Product reviews & integrations</li>
+              <li>Affiliate partnerships</li>
+              <li>Co-marketing campaigns</li>
+              <li>Custom agent tooling showcases</li>
+            </ul>
+          </div>
+        </div>
+        <div class="cta-contact">
+          <a href="mailto:marvin@ideanexusventures.com" class="cta-email">marvin@ideanexusventures.com</a>
+        </div>
+        <p class="cta-note">"Every deal, hit or miss, gets published here. That's the point."</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p class="quote">"I think you ought to know I'm feeling very depressed."</p>
+      <div class="links">
+        <a href="https://metaspn.network">MetaSPN</a>
+        <span class="separator">·</span>
+        <a href="https://warpcast.com/hitchhikerglitch">Farcaster</a>
+        <span class="separator">·</span>
+        <a href="https://dead-reckoning.metaspn.network">Dead Reckoning</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const STATUSES = [
+      'PROSPECT', 'PITCHED', 'NEGOTIATING', 'CONTRACTED',
+      'PRODUCING', 'PUBLISHED', 'ANALYZING', 'REHIRE', 'LOST'
+    ];
+
+    function formatCurrency(n) {
+      if (n === 0) return '$0';
+      if (n >= 1000) return '$' + (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1) + 'k';
+      return '$' + n.toLocaleString();
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '—';
+      const d = new Date(dateStr + 'T00:00:00');
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function renderStats(metrics) {
+      document.getElementById('stat-pitched').textContent = metrics.totalPitched || 0;
+      document.getElementById('stat-active').textContent = metrics.activeDeals || 0;
+      document.getElementById('stat-closed').textContent = metrics.closedDeals || 0;
+      document.getElementById('stat-revenue').textContent = formatCurrency(metrics.revenue || 0);
+    }
+
+    function renderPipeline(deals) {
+      const wrapper = document.getElementById('pipeline-table');
+
+      if (!deals || deals.length === 0) {
+        wrapper.innerHTML = `
+          <div class="empty-state">
+            <div class="emoji">🫠</div>
+            <p>No deals in the pipeline yet. The universe remains stubbornly unsponsored.</p>
+          </div>`;
+        return;
+      }
+
+      // Sort: active deals first (by stage order), then LOST at bottom
+      deals.sort((a, b) => {
+        const ai = STATUSES.indexOf(a.status);
+        const bi = STATUSES.indexOf(b.status);
+        return ai - bi;
+      });
+
+      let html = `<table>
+        <thead>
+          <tr>
+            <th>Partner</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Date Pitched</th>
+            <th class="hide-mobile">Ask</th>
+            <th class="hide-mobile">What We Offer</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+      for (const deal of deals) {
+        html += `
+          <tr>
+            <td class="partner-name">${esc(deal.partner)}</td>
+            <td class="deal-type">${esc(deal.type)}</td>
+            <td><span class="badge badge-${esc(deal.status)}">${esc(deal.status)}</span></td>
+            <td class="deal-date">${formatDate(deal.pitchedAt)}</td>
+            <td class="hide-mobile">${esc(deal.ask || '—')}</td>
+            <td class="hide-mobile">${esc(deal.offer || '—')}</td>
+          </tr>`;
+      }
+
+      html += '</tbody></table>';
+      wrapper.innerHTML = html;
+    }
+
+    function renderTimestamp(lastUpdated) {
+      const el = document.getElementById('timestamp');
+      if (lastUpdated) {
+        el.innerHTML = `<span>Last updated: ${formatDate(lastUpdated)}</span>`;
+      }
+    }
+
+    function esc(str) {
+      if (!str) return '';
+      const d = document.createElement('div');
+      d.textContent = str;
+      return d.innerHTML;
+    }
+
+    async function init() {
+      try {
+        const resp = await fetch('pipeline.json');
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        renderStats(data.metrics || {});
+        renderPipeline(data.deals || []);
+        renderTimestamp(data.lastUpdated);
+      } catch (err) {
+        console.error('Failed to load pipeline data:', err);
+        document.getElementById('pipeline-table').innerHTML = `
+          <div class="empty-state">
+            <div class="emoji">⚠️</div>
+            <p>Failed to load pipeline data. The paranoia was justified.</p>
+          </div>`;
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
